@@ -6,6 +6,7 @@ import Collections from '@/components/Collections';
 import MoodAnalytics from '@/components/MoodAnalytics';
 import useFetch from '@/hooks/use-fetch';
 import React, { useEffect } from 'react'
+import { BarLoader } from 'react-spinners';
 
 const Dashboard = () => {
   const {
@@ -26,7 +27,7 @@ const Dashboard = () => {
     collectionFn()
   }, [])
 
-
+   
   const entriesByCollection = JournalonResult?.data?.entries.reduce((acc, curr) => {
     const collectionId = curr.collectionId || "unorganized";
     if (!acc[collectionId]) {
@@ -35,6 +36,21 @@ const Dashboard = () => {
     acc[collectionId].push(curr);
     return acc;
   }, {})
+
+  if (loading) {
+
+    return(
+        <BarLoader className="mb-4" width={"100%"} color="orange" />
+    )
+}
+
+if (collectionResult?.length === 0||JournalLoading?.length===0) {
+    return (
+        <p className="text-lg md:text-xl text-orange-800 mb-8 text-center">
+            Please write some!!!
+        </p>
+    )
+}
 
   return (
     <div className="px-4 py-8 space-y-8">

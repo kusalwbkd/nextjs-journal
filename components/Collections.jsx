@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react'
 import CollectionPreview from './CollectionPreview';
 import CollectionForm from './CollectionForm';
 import useFetch from '@/hooks/use-fetch';
-import { createCollection } from '@/actions/collection';
+import { createCollection, getCollections } from '@/actions/collection';
 import { BarLoader } from 'react-spinners';
+import { toast } from 'sonner';
 
 const Collections = ({ collections = [], entriesByCollection }) => {
     const [isCollectionDialogOpen, setIsCollectionDialogOpen] = useState(false);
@@ -16,23 +17,30 @@ const Collections = ({ collections = [], entriesByCollection }) => {
         data: createCollectionResult,
     } = useFetch(createCollection);
 
-    useEffect(() => {
-        if (createCollectionResult) {
+    const {
+        loading: collectionLoading,
+        fn: collectionFn,
+        data: collectionResult,
+    } = useFetch(getCollections);
+
+    
+     useEffect(() => {
+        if(createCollectionResult){
             setIsCollectionDialogOpen(false);
+            collectionFn()
+            toast.success(`Collection ${createCollectionResult?.name} created!`);
 
-            toast.success(`Collection ${createCollectionResult.name} created!`);
         }
-
-        
-    }, [createCollectionResult, createCollectionLoading]);
+       
+          
+    }, [createCollectionLoading,createCollectionResult]);
+ 
 
     const handleCreateCollection = async (data) => {
         createCollectionFn(data);
     };
-    if(createCollectionResult){
-        <BarLoader className="mb-4" width={"100%"} color="orange" />
-    }
-    if (collections.length === 0) return <></>;
+  
+   
     return (
         <section id="collections" className="space-y-6">
             <h2 className="text-3xl font-bold gradient-title">Collections</h2>
@@ -51,8 +59,8 @@ const Collections = ({ collections = [], entriesByCollection }) => {
                 )}
 
                 {collections?.map((collection) => (
-                  
-                    
+
+
                     <CollectionPreview
                         key={collection.id}
                         id={collection.id}
