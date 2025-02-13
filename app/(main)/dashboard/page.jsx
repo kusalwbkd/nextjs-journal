@@ -40,7 +40,7 @@ const Dashboard = () => {
     <div className="px-4 py-8 space-y-8">
 
       <section className="space-y-4">
-     {/*    <MoodAnalytics /> */}
+        {/* <MoodAnalytics />  */}
       </section>
 
       <Collections
